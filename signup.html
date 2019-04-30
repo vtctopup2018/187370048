@@ -1,0 +1,117 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Register Page</title>
+   <!--Made with love by Mutiullah Samim -->
+   
+	<!--Bootsrap 4 CDN-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+    <!--Fontawesome CDN-->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+	<!--Custom styles-->
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<script>
+$(document).ready(function(){   
+	// handle button clicks         
+  $('#buttonID').click(function() {
+		// make an ajax call
+		alert($('#formID').serialize());
+    $.ajax({
+            dataType: 'jsonp',
+            jsonpCallback: '_wrapper',
+            data: $('#formID').serialize(),
+            type: 'POST',
+            url: "http://127.0.0.1:1818/signup",
+            success: handleButtonResponse,
+        });
+    });
+    function handleButtonResponse(data){
+      alert(data);
+      // parse the json string
+      var jsonObject = JSON.parse(data);
+      $('#reponseID').append( jsonObject.message );
+    }
+  
+  
+	$("#buttonme").click(function(){
+		var tempName, tempPassword;
+		tempName = document.forms["signup"]["Name"].value;
+		tempPassword = document.forms["signup"]["Password"].value;
+		if(tempName == "" || tempPassword == "")
+		{
+			alert("Please fill in all the blanks");
+		}
+		else
+		{
+		
+			$.ajax({
+				url: "http://127.0.0.1:1818/signup", 
+				type: 'POST',
+				data: $('#formID').serialize(),
+				success: function(result){
+					alert("Registration success");
+					alert("Thanks for creating an account, your username is: " + result.Name + ". Enjoy!");
+					window.location.href = "/login";
+					}, error: function (xhr, textStatus, errorThrown) {
+						alert("Registration failed, please try again with another username.");
+						console.log(textStatus);
+      		}
+				});
+			}
+	});
+});
+</script>
+<body>
+<div class="container">
+	<div class="d-flex justify-content-center h-100">
+		<div class="card">
+			<div class="card-header">
+				<h3>Sign Up</h3>
+			
+			</div>
+			<div class="card-body">
+				<form id="formID" name="signup"><br>
+					<div class="input-group form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-user"></i></span>
+						</div>
+						<input type="text" class="form-control" name="Name" placeholder="username" required>
+						
+					</div>
+					
+					<div class="input-group form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-key"></i></span>
+						</div>
+						<input type="password" class="form-control" name="Password" placeholder="password" required>
+					</div>
+					<!--<div class="row align-items-center remember">
+						<input type="checkbox">Remember Me
+					</div> -->
+					<div class="form-group">
+						<input type="button" value="Register" id="buttonme" class="btn float-right login_btn">
+					</div>
+				</form>
+			</div>
+			<div class="card-footer">
+				<div class="d-flex justify-content-center links">
+					You have an account?<a href="/login">Sign In</a>
+				</div>
+				<!--<div class="d-flex justify-content-center">
+					<a href="#">Forgot your password?</a>
+				</div>-->
+			</div> 
+		</div>
+	</div>
+</div>
+</body>
+</html>

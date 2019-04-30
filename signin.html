@@ -1,0 +1,148 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Page</title>
+   <!--Made with love by Mutiullah Samim -->
+   
+	<!--Bootsrap 4 CDN-->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+    <!--Fontawesome CDN-->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+	<!--Custom styles-->
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<script>
+$(document).ready(function(){   
+	// handle button clicks         
+  $('#buttonID').click(function() {
+		// make an ajax call
+		alert($('#formID').serialize());
+    $.ajax({
+            dataType: 'jsonp',
+            jsonpCallback: '_wrapper',
+            data: $('#formID').serialize(),
+            type: 'POST',
+            url: "http://127.0.0.1:1818/login",
+            success: handleButtonResponse,
+        });
+    });
+    function handleButtonResponse(data){
+      alert(data);
+      // parse the json string
+      var jsonObject = JSON.parse(data);
+      $('#reponseID').append( jsonObject.message );
+    }
+	
+		window.onload = function what(){
+		document.getElementById("result").value = localStorage.getItem("rememberac");
+		};
+  
+  
+	$("#buttonme").click(function(){
+		var tempName, tempPassword, tempRemember;
+		tempName = document.forms["signin"]["Name"].value;
+		tempPassword = document.forms["signin"]["Password"].value;
+		tempRemember = document.forms["signin"]["remember"].checked;
+		
+		if(tempName == "" || tempPassword == "")
+		{
+			alert("Please fill in all the blanks");
+		}
+		else
+		{
+			
+		
+			$.ajax({
+				url: "http://127.0.0.1:1818/login", 
+				type: 'POST',
+				data: $('#formID').serialize(),
+				success: function(result){
+					alert("Login Successful!");
+					localStorage.setItem('username', tempName);
+					//localStorage.setItem('rememberac', tempName);
+					
+					if(tempRemember == true)
+					{localStorage.setItem('rememberac', tempName);}
+					else
+					{
+					localStorage.removeItem("rememberac");
+					}
+					window.location.href = "/index";
+					}, error: function (xhr, textStatus, errorThrown) {
+						alert("Login Fail : Invalid username and password.");
+						console.log(textStatus);
+      		}
+				});
+			}
+	});
+});
+</script>
+<body>
+<div class="container">
+	<div class="d-flex justify-content-center h-100">
+		<div class="card">
+			<div class="card-header">
+				<h3>Sign In</h3>
+				
+			</div>
+			<div class="card-body">
+				<form id="formID" name="signin"><br>
+					<div class="input-group form-group" >
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-user"></i></span>
+						</div>
+							<script>
+					if(localStorage.getItem('rememberac') != null)
+					{
+						 
+						document.write("<input type='text' class='form-control' name='Name' placeholder='username'  id='result' required>");
+					}else
+					{
+						document.write("<input type='text' class='form-control' name='Name' placeholder='username' required>");
+					}
+					</script>
+						
+						
+					</div>
+					
+					<div class="input-group form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-key"></i></span>
+						</div>
+						<input type="password" class="form-control" name="Password" placeholder="password" required>
+					</div>
+					<div class="row align-items-center remember">
+					<script>
+					if(localStorage.getItem('rememberac') != null)
+					{
+						document.write("<input type='checkbox'  name='remember' value='remember' checked>Remember Me");
+					}else
+					{
+						document.write("<input type='checkbox'  name='remember' value='remember'>Remember Me");
+					}
+					</script>
+					</div> 
+					<div class="form-group">
+						<input type="button" value="Login" id="buttonme" class="btn float-right login_btn">
+					</div>
+				</form>
+			</div>
+			<div class="card-footer">
+				<div class="d-flex justify-content-center links">
+					Don't have an account?<a href="/signup">Sign Up</a>
+				</div>
+				
+			</div> 
+		</div>
+	</div>
+</div>
+</body>
+</html>
